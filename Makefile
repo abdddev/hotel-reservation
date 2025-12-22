@@ -1,8 +1,11 @@
 build:
-	go build -o bin/api
+	@go build -o bin/api
 
 run: build
-	./bin/api
+	@./bin/api
+
+seed:
+	@go run scripts/seed.go
 
 test:
-	go test -v ./...
+	@go test -v ./...
