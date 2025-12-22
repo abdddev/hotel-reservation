@@ -62,9 +62,7 @@ func (h *UserHandler) HandlerPostUser(c *fiber.Ctx) error {
 }
 
 func (h *UserHandler) HandlerGetUser(c *fiber.Ctx) error {
-	var (
-		id = c.Params("id")
-	)
+	id := c.Params("id")
 	user, err := h.userStore.GetUserById(c.Context(), id)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
