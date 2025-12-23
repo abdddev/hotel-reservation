@@ -27,7 +27,7 @@ func (tdb *testdb) teardown(t *testing.T) {
 }
 
 func setup(t *testing.T) *testdb {
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(db.DBURI))
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(db.TDBURI))
 	if err != nil {
 		log.Fatal(err)
 	}
