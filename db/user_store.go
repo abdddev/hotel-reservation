@@ -43,9 +43,7 @@ func (s *MongoUserStore) Drop(ctx context.Context) error {
 }
 
 func (s *MongoUserStore) UpdateUser(ctx context.Context, id string, params types.UpdateUserParams) error {
-	update := bson.D{
-		{"$set", params.ToBson()},
-	}
+	update := bson.M{"$set": params}
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err

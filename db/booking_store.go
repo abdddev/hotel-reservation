@@ -12,6 +12,8 @@ import (
 type BookingStore interface {
 	InsertBooking(context.Context, *types.Booking) (*types.Booking, error)
 	GetBooking(context.Context, bson.M) ([]*types.Booking, error)
+	GetBookingById(context.Context, string) (*types.Booking, error)
+	UpdateBooking(context.Context, string, bson.M) error
 }
 
 type MongoBookingStore struct {
@@ -28,6 +30,16 @@ func NewMongoBookingStore(client *mongo.Client) *MongoBookingStore {
 	}
 }
 
+func (s *MongoBookingStore) UpdateBooking(ctx context.Context, id string, update bson.M) error {
+	oid, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+	m := bson.M{"$set": update}
+	_, err = s.coll.UpdateByID(ctx, oid, m)
+	return err
+}
+
 func (s *MongoBookingStore) GetBooking(ctx context.Context, filter bson.M) ([]*types.Booking, error) {
 	curr, err := s.coll.Find(ctx, filter)
 	if err != nil {
@@ -38,6 +50,19 @@ func (s *MongoBookingStore) GetBooking(ctx context.Context, filter bson.M) ([]*t
 		return nil, err
 	}
 	return bookings, nil
+}
+
+func (s *MongoBookingStore) GetBookingById(ctx context.Context, id string) (*types.Booking, error) {
+	oid, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	var booking types.Booking
+	if err := s.coll.FindOne(ctx, bson.M{"_id": oid}).Decode(&booking); err != nil {
+		return nil, err
+	}
+
+	return &booking, nil
 }
 
 func (s *MongoBookingStore) InsertBooking(ctx context.Context, booking *types.Booking) (*types.Booking, error) {
