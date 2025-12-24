@@ -6,7 +6,8 @@ const DBURI = "mongodb://localhost:27017/?directConnection=true"
 const TDBURI = "mongodb://localhost:27017/?directConnection=true"
 
 type Store struct {
-	User  UserStore
-	Hotel HotelStore
-	Room  RoomStore
+	User    UserStore
+	Hotel   HotelStore
+	Room    RoomStore
+	Booking BookingStore
 }
