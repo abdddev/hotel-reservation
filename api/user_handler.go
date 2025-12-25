@@ -25,7 +25,7 @@ func (h *UserHandler) HandlerPutUser(c *fiber.Ctx) error {
 		userId = c.Params("id")
 	)
 	if err := c.BodyParser(&params); err != nil {
-		return err
+		return ErrBadRequest()
 	}
 
 	if err := h.userStore.UpdateUser(c.Context(), userId, params); err != nil {
@@ -45,7 +45,7 @@ func (h *UserHandler) HandlerDeleteUser(c *fiber.Ctx) error {
 func (h *UserHandler) HandlerPostUser(c *fiber.Ctx) error {
 	var params types.CreateUserParams
 	if err := c.BodyParser(&params); err != nil {
-		return err
+		return ErrBadRequest()
 	}
 	if errors := params.Validate(); len(errors) > 0 {
 		return c.JSON(errors)
@@ -76,7 +76,7 @@ func (h *UserHandler) HandlerGetUser(c *fiber.Ctx) error {
 func (h *UserHandler) HandlerGetUsers(c *fiber.Ctx) error {
 	users, err := h.userStore.GetUsers(c.Context())
 	if err != nil {
-		return err
+		return ErrResourceNotFound("user")
 	}
 	return c.JSON(users)
 }
