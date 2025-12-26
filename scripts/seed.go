@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math/rand"
 	"time"
 
 	"github.com/abdddev/hotel-reservation/api"
@@ -106,7 +107,14 @@ func main() {
 	hotel := fixtures.AddHotel(store, "some hotel", "bermuda", 5, nil)
 	room := fixtures.AddRoom(store, "large", true, 88.44, hotel.ID)
 	booking := fixtures.AddBooking(store, user.ID, room.ID, time.Now(), time.Now().AddDate(0, 0, 5))
-	fmt.Printf("booling -> %s\n", booking.ID)
+	fmt.Printf("booking -> %s\n", booking.ID)
+
+	for i := 1; i < 10001; i++ {
+		name := fmt.Sprintf("random hotel name %d", i)
+		location := fmt.Sprintf("random hotel location %d", i)
+
+		fixtures.AddHotel(store, name, location, rand.Intn(5)+1, nil)
+	}
 
 	//james := seedUser(false, "james", "foo", "james@foo.com", "supersecurepassword")
 	//seedUser(true, "admin", "admin", "admin@foo.com", "admin")
