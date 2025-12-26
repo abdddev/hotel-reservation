@@ -34,7 +34,7 @@ type MongoUserStore struct {
 func NewMongoUserStore(client *mongo.Client) *MongoUserStore {
 	return &MongoUserStore{
 		client: client,
-		coll:   client.Database(DBNAME).Collection(userColl),
+		coll:   client.Database("hotel-reservation").Collection(userColl),
 	}
 }
 

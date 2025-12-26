@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/abdddev/hotel-reservation/db"
@@ -17,14 +16,13 @@ type testdb struct {
 }
 
 func (tdb *testdb) teardown(t *testing.T) {
-	if err := tdb.client.Database(db.DBNAME).Drop(context.TODO()); err != nil {
+	if err := tdb.client.Database("hotel-reservation").Drop(context.TODO()); err != nil {
 		t.Fatal(err)
 	}
 }
 
-func setup(t *testing.T) *testdb {
-	mongoURI := os.Getenv("MONGO_DB_URL_TEST")
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(mongoURI))
+func setup() *testdb {
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI("mongodb://localhost:27017/?directConnection=true"))
 	if err != nil {
 		log.Fatal(err)
 	}
