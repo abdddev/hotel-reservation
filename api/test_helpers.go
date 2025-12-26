@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"log"
+	"os"
 	"testing"
 
 	"github.com/abdddev/hotel-reservation/db"
@@ -22,7 +23,8 @@ func (tdb *testdb) teardown(t *testing.T) {
 }
 
 func setup(t *testing.T) *testdb {
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(db.TDBURI))
+	mongoURI := os.Getenv("MONGO_DB_URL_TEST")
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(mongoURI))
 	if err != nil {
 		log.Fatal(err)
 	}

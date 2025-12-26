@@ -1,9 +1,8 @@
 package db
 
-const DBNAME = "hotel-reservation"
-const TDBNAME = "hotel-reservation-test"
-const DBURI = "mongodb://localhost:27017/?directConnection=true"
-const TDBURI = "mongodb://localhost:27017/?directConnection=true"
+import "os"
+
+var DBNAME = os.Getenv("MONGO_DB_NAME")
 
 type Pagination struct {
 	Limit int64

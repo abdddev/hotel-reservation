@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 	"time"
 
 	"github.com/abdddev/hotel-reservation/api"
 	"github.com/abdddev/hotel-reservation/db"
 	"github.com/abdddev/hotel-reservation/db/fixtures"
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -85,13 +87,25 @@ import (
 //}
 
 func main() {
-	ctx := context.Background()
+	if err := godotenv.Load(); err != nil {
+		log.Fatal(err)
+	}
+	if mongoDbName := os.Getenv("MONGO_DB_NAME"); mongoDbName != "" {
+		db.DBNAME = mongoDbName
+	}
+
+	var (
+		ctx           = context.Background()
+		mongoEndpoint = os.Getenv("MONGO_DB_URL_TEST")
+		dbName        = os.Getenv("MONGO_DB_NAME")
+	)
+
 	var err error
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(db.DBURI))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(mongoEndpoint))
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err := client.Database(db.DBNAME).Drop(ctx); err != nil {
+	if err := client.Database(dbName).Drop(ctx); err != nil {
 		log.Fatal(err)
 	}
 	store := &db.Store{
